@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace DecoratorPatternWithScrutor.Controllers
 {
@@ -17,11 +19,22 @@ namespace DecoratorPatternWithScrutor.Controllers
     [Route("[controller]")]
     public class RssInfoController : ControllerBase
     {
-        private readonly ILogger<RssInfoController> _logger;
+        private readonly IRssFeedReader _rssFeedReader;
 
-        public RssInfoController(ILogger<RssInfoController> logger)
+        public RssInfoController(IRssFeedReader rssFeedReader)
         {
-            _logger = logger;
+            _rssFeedReader = rssFeedReader;
+        }
+
+        [HttpGet("{slug}")]
+        public ActionResult<RssItem> GetBySlug(string slug)
+        {
+            var item =
+            _rssFeedReader.GetItem(slug);
+
+            if (item != null)
+                return Ok(item);
+            else return NotFound();
         }
     }
 }

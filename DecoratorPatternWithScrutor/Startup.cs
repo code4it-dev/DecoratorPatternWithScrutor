@@ -1,3 +1,4 @@
+using DecoratorPatternWithScrutor.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,8 +27,10 @@ namespace DecoratorPatternWithScrutor
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
+
+            services.AddSingleton<IRssFeedReader, RssFeedReader>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DecoratorPatternWithScrutor", Version = "v1" });
