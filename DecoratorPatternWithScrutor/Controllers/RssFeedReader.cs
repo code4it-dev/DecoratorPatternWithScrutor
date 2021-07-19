@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Caching.Memory;
 using System.Linq;
 using System.ServiceModel.Syndication;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace DecoratorPatternWithScrutor.Controllers
 {
-
     public class RssFeedReader : IRssFeedReader
     {
         public RssItem GetItem(string slug)
@@ -25,6 +20,31 @@ namespace DecoratorPatternWithScrutor.Controllers
                 Title = item.Title.Text,
                 Url = item.Links.First().Uri.AbsoluteUri
             };
+        }
+    }
+
+    public class CachedFeedReader : IRssFeedReader
+    {
+        private readonly IRssFeedReader _rssFeedReader;
+        private readonly IMemoryCache _memoryCache;
+
+        public CachedFeedReader(IRssFeedReader rssFeedReader, IMemoryCache memoryCache)
+        {
+            _rssFeedReader = rssFeedReader;
+            _memoryCache = memoryCache;
+        }
+
+        public RssItem GetItem(string slug)
+        {
+            var isFromCache = _memoryCache.TryGetValue(slug, out RssItem item);
+            if (!isFromCache)
+            {
+                item = _rssFeedReader.GetItem(slug);
+            }
+            item.IsFromCache = isFromCache;
+
+            _memoryCache.Set(slug, item);
+            return item;
         }
     }
 }

@@ -29,7 +29,9 @@ namespace DecoratorPatternWithScrutor
         {
             services.AddControllers();
 
+            services.AddMemoryCache();
             services.AddSingleton<IRssFeedReader, RssFeedReader>();
+            services.Decorate<IRssFeedReader, CachedFeedReader>();
 
             services.AddSwaggerGen(c =>
             {
