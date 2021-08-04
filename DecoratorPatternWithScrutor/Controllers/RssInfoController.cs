@@ -22,8 +22,7 @@ namespace DecoratorPatternWithScrutor.Controllers
         [HttpGet("{slug}")]
         public ActionResult<RssItem> GetBySlug(string slug)
         {
-            var item =
-            _rssFeedReader.GetItem(slug);
+            var item = _rssFeedReader.GetItem(slug);
 
             if (item != null)
                 return Ok(item);
