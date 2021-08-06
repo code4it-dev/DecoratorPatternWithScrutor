@@ -18,7 +18,8 @@ namespace DecoratorPatternWithScrutor.Controllers
             return new RssItem
             {
                 Title = item.Title.Text,
-                Url = item.Links.First().Uri.AbsoluteUri
+                Url = item.Links.First().Uri.AbsoluteUri,
+                Source = "RSS feed"
             };
         }
     }
@@ -41,7 +42,10 @@ namespace DecoratorPatternWithScrutor.Controllers
             {
                 item = _rssFeedReader.GetItem(slug);
             }
-            item.IsFromCache = isFromCache;
+            else
+            {
+                item.Source = "Cache";
+            }
 
             _memoryCache.Set(slug, item);
             return item;

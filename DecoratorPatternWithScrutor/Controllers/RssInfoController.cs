@@ -2,12 +2,6 @@
 
 namespace DecoratorPatternWithScrutor.Controllers
 {
-    /*
-    -  Installato system.servicemodel.syndication per RSS feed
-    - Scrutor (https://www.nuget.org/packages/Scrutor/3.3.0?_src=template)
-
-     */
-
     [ApiController]
     [Route("[controller]")]
     public class RssInfoController : ControllerBase
